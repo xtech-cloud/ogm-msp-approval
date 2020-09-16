@@ -11,6 +11,8 @@ service Operator
     rpc Join(OperatorJoinRequest) returns (BlankResponse) {}
     // 离开一个工作流
     rpc Leave(OperatorLeaveRequest) returns (BlankResponse) {}
+    // 列举
+    rpc List(OperatorListRequest) returns (OperatorListResponse) {}
 }
 
 // 加入的请求
@@ -25,4 +27,20 @@ message OperatorLeaveRequest
 {
     string operator = 1; // 操作员
     string workflow = 2; // 工作流UUID
+}
+
+// 列举的请求
+message OperatorListRequest
+{
+    int64 offset = 1;    // 偏移值
+    int64 count = 2;     // 数量
+    string workflow = 3; // 工作流
+}
+
+// 列举的回复
+message OperatorListResponse
+{
+    Status status = 1;          // 状态
+    uint64 total = 2;           // 总数
+    repeated string entity = 3; // 实体列表
 }

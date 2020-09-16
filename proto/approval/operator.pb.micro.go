@@ -38,6 +38,8 @@ type OperatorService interface {
 	Join(ctx context.Context, in *OperatorJoinRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 离开一个工作流
 	Leave(ctx context.Context, in *OperatorLeaveRequest, opts ...client.CallOption) (*BlankResponse, error)
+	// 列举
+	List(ctx context.Context, in *OperatorListRequest, opts ...client.CallOption) (*OperatorListResponse, error)
 }
 
 type operatorService struct {
@@ -72,6 +74,16 @@ func (c *operatorService) Leave(ctx context.Context, in *OperatorLeaveRequest, o
 	return out, nil
 }
 
+func (c *operatorService) List(ctx context.Context, in *OperatorListRequest, opts ...client.CallOption) (*OperatorListResponse, error) {
+	req := c.c.NewRequest(c.name, "Operator.List", in)
+	out := new(OperatorListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Operator service
 
 type OperatorHandler interface {
@@ -79,12 +91,15 @@ type OperatorHandler interface {
 	Join(context.Context, *OperatorJoinRequest, *BlankResponse) error
 	// 离开一个工作流
 	Leave(context.Context, *OperatorLeaveRequest, *BlankResponse) error
+	// 列举
+	List(context.Context, *OperatorListRequest, *OperatorListResponse) error
 }
 
 func RegisterOperatorHandler(s server.Server, hdlr OperatorHandler, opts ...server.HandlerOption) error {
 	type operator interface {
 		Join(ctx context.Context, in *OperatorJoinRequest, out *BlankResponse) error
 		Leave(ctx context.Context, in *OperatorLeaveRequest, out *BlankResponse) error
+		List(ctx context.Context, in *OperatorListRequest, out *OperatorListResponse) error
 	}
 	type Operator struct {
 		operator
@@ -103,4 +118,8 @@ func (h *operatorHandler) Join(ctx context.Context, in *OperatorJoinRequest, out
 
 func (h *operatorHandler) Leave(ctx context.Context, in *OperatorLeaveRequest, out *BlankResponse) error {
 	return h.OperatorHandler.Leave(ctx, in, out)
+}
+
+func (h *operatorHandler) List(ctx context.Context, in *OperatorListRequest, out *OperatorListResponse) error {
+	return h.OperatorHandler.List(ctx, in, out)
 }
