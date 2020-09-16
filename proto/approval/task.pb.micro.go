@@ -43,7 +43,7 @@ type TaskService interface {
 	// 获取任务
 	Get(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskGetResponse, error)
 	// 列举任务
-	List(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskListResponse, error)
+	List(ctx context.Context, in *TaskListRequest, opts ...client.CallOption) (*TaskListResponse, error)
 }
 
 type taskService struct {
@@ -98,7 +98,7 @@ func (c *taskService) Get(ctx context.Context, in *TaskGetRequest, opts ...clien
 	return out, nil
 }
 
-func (c *taskService) List(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskListResponse, error) {
+func (c *taskService) List(ctx context.Context, in *TaskListRequest, opts ...client.CallOption) (*TaskListResponse, error) {
 	req := c.c.NewRequest(c.name, "Task.List", in)
 	out := new(TaskListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -120,7 +120,7 @@ type TaskHandler interface {
 	// 获取任务
 	Get(context.Context, *TaskGetRequest, *TaskGetResponse) error
 	// 列举任务
-	List(context.Context, *TaskGetRequest, *TaskListResponse) error
+	List(context.Context, *TaskListRequest, *TaskListResponse) error
 }
 
 func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.HandlerOption) error {
@@ -129,7 +129,7 @@ func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.Handl
 		Accept(ctx context.Context, in *TaskAcceptRequest, out *BlankResponse) error
 		Reject(ctx context.Context, in *TaskRejectRequest, out *BlankResponse) error
 		Get(ctx context.Context, in *TaskGetRequest, out *TaskGetResponse) error
-		List(ctx context.Context, in *TaskGetRequest, out *TaskListResponse) error
+		List(ctx context.Context, in *TaskListRequest, out *TaskListResponse) error
 	}
 	type Task struct {
 		task
@@ -158,6 +158,6 @@ func (h *taskHandler) Get(ctx context.Context, in *TaskGetRequest, out *TaskGetR
 	return h.TaskHandler.Get(ctx, in, out)
 }
 
-func (h *taskHandler) List(ctx context.Context, in *TaskGetRequest, out *TaskListResponse) error {
+func (h *taskHandler) List(ctx context.Context, in *TaskListRequest, out *TaskListResponse) error {
 	return h.TaskHandler.List(ctx, in, out)
 }

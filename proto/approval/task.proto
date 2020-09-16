@@ -16,7 +16,7 @@ service Task
     // 获取任务
     rpc Get(TaskGetRequest) returns (TaskGetResponse) {}
     // 列举任务
-    rpc List(TaskGetRequest) returns (TaskListResponse) {}
+    rpc List(TaskListRequest) returns (TaskListResponse) {}
 }
 
 // 提交的请求
