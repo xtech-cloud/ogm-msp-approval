@@ -20,7 +20,8 @@ service Workflow
 // 创建的请求
 message WorkflowMakeRequest
 {
-    string name = 1; // 名称
+    string name = 1;       // 名称
+    WorkflowMode mode = 2; // 模式
 }
 
 // 列举的请求
