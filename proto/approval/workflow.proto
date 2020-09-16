@@ -57,5 +57,4 @@ message WorkflowGetResponse
 {
     Status status = 1;            // 状态
     WorkflowEntity entity = 2;    // 实体
-    repeated string operator = 3; // 操作员
 }

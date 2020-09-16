@@ -39,6 +39,7 @@ message TaskRejectRequest
 {
     string uuid = 1;     // uuid
     string operator = 2; // 操作员
+    string reason = 3;   // 原因
 }
 
 // 获取的请求
