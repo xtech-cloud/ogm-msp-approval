@@ -20,7 +20,7 @@ service Workflow
 // 创建的请求
 message WorkflowMakeRequest
 {
-    string name = 1;       // 名称
+    string name = 1; // 名称
     WorkflowMode mode = 2; // 模式
 }
 
@@ -42,13 +42,14 @@ message WorkflowListResponse
 // 删除的请求
 message WorkflowRemoveRequest
 {
-    string name = 1; // 名称
+    string uuid = 1; // uuid
 }
 
 // 获取的请求
 message WorkflowGetRequest
 {
-    string name = 1; // 名称
+    string uuid = 1; // uuid
+    string name = 2; // name
 }
 
 // 获取的回复
