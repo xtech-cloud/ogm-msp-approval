@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+import "proto/approval/shared.proto";
+
+package approval;
+
+// 任务
+service Task
+{
+    // 提交一个任务
+    rpc Submit(TaskSubmitRequest) returns (BlankResponse) {}
+    // 通过一个任务
+    rpc Accept(TaskAcceptRequest) returns (BlankResponse) {}
+    // 驳回一个任务
+    rpc Reject(TaskRejectRequest) returns (BlankResponse) {}
+    // 获取任务
+    rpc Get(TaskGetRequest) returns (BlankResponse) {}
+    // 列举任务
+    rpc List(TaskGetRequest) returns (BlankResponse) {}
+}
+
+// 提交的请求
+message TaskSubmitRequest
+{
+    string subject = 1;  // 标题
+    string body = 2;     // 内容
+    string workflow = 3; // 工作流
+}
+
+// 通过的请求
+message TaskAcceptRequest
+{
+    string uuid = 1;     // uuid
+    string operator = 2; // 操作员
+}
+
+// 驳回的请求
+message TaskRejectRequest
+{
+    string uuid = 1;     // uuid
+    string operator = 2; // 操作员
+}
+
+// 获取的请求
+message TaskGetRequest
+{
+    string uuid = 1; // uuid
+}
+
+// 获取的回复
+message TaskGetResponse
+{
+    Status status = 1;     // 状态
+    TaskEntity entity = 2; // 实体
+}
+
+// 列举的请求
+message TaskListRequest
+{
+    int64 offset = 1;     // 偏移值
+    int64 count = 2;      // 数量
+    string workflow = 3;  // 工作流
+    string opreator = 4;  // 操作员
+    TaskStatus state = 5; // 状态
+}
+
+// 列举的回复
+message TaskListResponse
+{
+    Status status = 1;              // 状态
+    uint64 total = 2;               // 总数
+    repeated TaskEntity entity = 3; // 实体列表
+}

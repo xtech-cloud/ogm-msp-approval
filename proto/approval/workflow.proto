@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "proto/approval/shared.proto";
+
+package approval;
+
+// 工作流
+service Workflow
+{
+    // 创建一个工作流
+    rpc Make(WorkflowMakeRequest) returns (BlankResponse) {}
+    // 列举工作流
+    rpc List(WorkflowListRequest) returns (WorkflowListResponse) {}
+    // 删除一个工作流
+    rpc Remove(WorkflowRemoveRequest) returns (BlankResponse) {}
+    // 获取一个工作流信息
+    rpc Get(WorkflowGetRequest) returns (WorkflowGetResponse) {}
+}
+
+// 创建的请求
+message WorkflowMakeRequest
+{
+    string name = 1; // 名称
+}
+
+// 列举的请求
+message WorkflowListRequest
+{
+    int64 offset = 1; // 偏移值
+    int64 count = 2;  // 数量
+}
+
+// 列举的回复
+message WorkflowListResponse
+{
+    Status status = 1;                  // 状态
+    uint64 total = 2;                   // 总数
+    repeated WorkflowEntity entity = 3; // 实体列表
+}
+
+// 删除的请求
+message WorkflowRemoveRequest
+{
+    string uuid = 1; // uuid
+}
+
+// 获取的请求
+message WorkflowGetRequest
+{
+    string uuid = 1; // uuid
+}
+
+// 获取的回复
+message WorkflowGetResponse
+{
+    Status status = 1;            // 状态
+    WorkflowEntity entity = 2;    // 实体
+    repeated string operator = 3; // 操作员
+}

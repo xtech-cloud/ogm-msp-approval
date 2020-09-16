@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package approval;
+
+// 状态
+message Status
+{
+    int32 code = 1;     // 状态码
+    string message = 2; // 状态信息
+}
+
+// 空白请求
+message BlankRequest
+{
+}
+
+// 空白回复
+message BlankResponse
+{
+    Status status = 1; // 状态
+}
+
+// 工作流模式
+enum WorkflowMode {
+    WORKFLOW_MODE_INVALID = 0;  // 无效
+    WORKFLOW_MODE_PARALLEL = 1; // 并行
+    WORKFLOW_MODE_QUEUE = 2;    // 顺序
+}
+
+// 任务状态
+enum TaskStatus {
+    TASK_STATUS_INVALID = 0;  // 无效
+    TASK_STATUS_PENDING = 1;  // 等待
+    TASK_STATUS_ACCEPTED = 2; // 已通过
+    TASK_STATUS_REJECTED = 3; // 已驳回
+}
+
+// 工作流实体
+message WorkflowEntity
+{
+    string uuid = 1;       // 唯一ID
+    string name = 2;       // 名称
+    WorkflowMode mode = 3; // 模式
+}
+
+// 任务实体
+message TaskEntity
+{
+    string uuid = 1;      // 唯一ID
+    string subject = 2;   // 标题
+    string body = 3;      // 内容
+    TaskStatus state = 4; // 状态
+}
