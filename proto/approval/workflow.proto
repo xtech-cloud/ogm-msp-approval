@@ -42,13 +42,13 @@ message WorkflowListResponse
 // 删除的请求
 message WorkflowRemoveRequest
 {
-    string uuid = 1; // uuid
+    string name = 1; // 名称
 }
 
 // 获取的请求
 message WorkflowGetRequest
 {
-    string uuid = 1; // uuid
+    string name = 1; // 名称
 }
 
 // 获取的回复

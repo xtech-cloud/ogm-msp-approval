@@ -19,14 +19,14 @@ service Operator
 message OperatorJoinRequest
 {
     string operator = 1; // 操作员
-    string workflow = 2; // 工作流UUID
+    string workflow = 2; // 工作流
 }
 
 // 离开的请求
 message OperatorLeaveRequest
 {
     string operator = 1; // 操作员
-    string workflow = 2; // 工作流UUID
+    string workflow = 2; // 工作流
 }
 
 // 列举的请求
