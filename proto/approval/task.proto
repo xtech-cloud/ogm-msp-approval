@@ -14,9 +14,9 @@ service Task
     // 驳回一个任务
     rpc Reject(TaskRejectRequest) returns (BlankResponse) {}
     // 获取任务
-    rpc Get(TaskGetRequest) returns (BlankResponse) {}
+    rpc Get(TaskGetRequest) returns (TaskGetResponse) {}
     // 列举任务
-    rpc List(TaskGetRequest) returns (BlankResponse) {}
+    rpc List(TaskGetRequest) returns (TaskListResponse) {}
 }
 
 // 提交的请求

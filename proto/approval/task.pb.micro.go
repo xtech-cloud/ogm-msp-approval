@@ -41,9 +41,9 @@ type TaskService interface {
 	// 驳回一个任务
 	Reject(ctx context.Context, in *TaskRejectRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 获取任务
-	Get(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*BlankResponse, error)
+	Get(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskGetResponse, error)
 	// 列举任务
-	List(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*BlankResponse, error)
+	List(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskListResponse, error)
 }
 
 type taskService struct {
@@ -88,9 +88,9 @@ func (c *taskService) Reject(ctx context.Context, in *TaskRejectRequest, opts ..
 	return out, nil
 }
 
-func (c *taskService) Get(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*BlankResponse, error) {
+func (c *taskService) Get(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskGetResponse, error) {
 	req := c.c.NewRequest(c.name, "Task.Get", in)
-	out := new(BlankResponse)
+	out := new(TaskGetResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -98,9 +98,9 @@ func (c *taskService) Get(ctx context.Context, in *TaskGetRequest, opts ...clien
 	return out, nil
 }
 
-func (c *taskService) List(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*BlankResponse, error) {
+func (c *taskService) List(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskListResponse, error) {
 	req := c.c.NewRequest(c.name, "Task.List", in)
-	out := new(BlankResponse)
+	out := new(TaskListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -118,9 +118,9 @@ type TaskHandler interface {
 	// 驳回一个任务
 	Reject(context.Context, *TaskRejectRequest, *BlankResponse) error
 	// 获取任务
-	Get(context.Context, *TaskGetRequest, *BlankResponse) error
+	Get(context.Context, *TaskGetRequest, *TaskGetResponse) error
 	// 列举任务
-	List(context.Context, *TaskGetRequest, *BlankResponse) error
+	List(context.Context, *TaskGetRequest, *TaskListResponse) error
 }
 
 func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.HandlerOption) error {
@@ -128,8 +128,8 @@ func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.Handl
 		Submit(ctx context.Context, in *TaskSubmitRequest, out *BlankResponse) error
 		Accept(ctx context.Context, in *TaskAcceptRequest, out *BlankResponse) error
 		Reject(ctx context.Context, in *TaskRejectRequest, out *BlankResponse) error
-		Get(ctx context.Context, in *TaskGetRequest, out *BlankResponse) error
-		List(ctx context.Context, in *TaskGetRequest, out *BlankResponse) error
+		Get(ctx context.Context, in *TaskGetRequest, out *TaskGetResponse) error
+		List(ctx context.Context, in *TaskGetRequest, out *TaskListResponse) error
 	}
 	type Task struct {
 		task
@@ -154,10 +154,10 @@ func (h *taskHandler) Reject(ctx context.Context, in *TaskRejectRequest, out *Bl
 	return h.TaskHandler.Reject(ctx, in, out)
 }
 
-func (h *taskHandler) Get(ctx context.Context, in *TaskGetRequest, out *BlankResponse) error {
+func (h *taskHandler) Get(ctx context.Context, in *TaskGetRequest, out *TaskGetResponse) error {
 	return h.TaskHandler.Get(ctx, in, out)
 }
 
-func (h *taskHandler) List(ctx context.Context, in *TaskGetRequest, out *BlankResponse) error {
+func (h *taskHandler) List(ctx context.Context, in *TaskGetRequest, out *TaskListResponse) error {
 	return h.TaskHandler.List(ctx, in, out)
 }
