@@ -60,7 +60,7 @@ message TaskListRequest
 {
     int64 offset = 1;     // 偏移值
     int64 count = 2;      // 数量
-    string workflow = 3;  // 工作流
+    string workflow = 3;  // 工作流前缀
     string opreator = 4;  // 操作员
     TaskStatus state = 5; // 状态
 }
