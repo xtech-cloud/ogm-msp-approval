@@ -16,7 +16,11 @@ service Task
     // 获取任务
     rpc Get(TaskGetRequest) returns (TaskGetResponse) {}
     // 列举任务
+    // 精确匹配，参数使用相等匹配
     rpc List(TaskListRequest) returns (TaskListResponse) {}
+    // 搜索任务
+    // 模糊匹配，参数使用相似匹配
+    rpc Search(TaskSearchRequest) returns (TaskSearchResponse) {}
 }
 
 // 提交的请求
@@ -60,7 +64,7 @@ message TaskListRequest
 {
     int64 offset = 1;     // 偏移值
     int64 count = 2;      // 数量
-    string workflow = 3;  // 工作流前缀
+    string workflow = 3;  // 工作流（UUID）
     string opreator = 4;  // 操作员
     TaskStatus state = 5; // 状态
 }
@@ -72,3 +76,22 @@ message TaskListResponse
     uint64 total = 2;               // 总数
     repeated TaskEntity entity = 3; // 实体列表
 }
+
+// 搜索的请求
+message TaskSearchRequest
+{
+    int64 offset = 1;     // 偏移值
+    int64 count = 2;      // 数量
+    string workflow = 3;  // 工作流（Name）
+    string opreator = 4;  // 操作员
+    TaskStatus state = 5; // 状态
+}
+
+// 搜索的回复
+message TaskSearchResponse
+{
+    Status status = 1;              // 状态
+    uint64 total = 2;               // 总数
+    repeated TaskEntity entity = 3; // 实体列表
+}
+

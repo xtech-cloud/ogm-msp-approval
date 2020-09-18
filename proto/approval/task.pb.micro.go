@@ -43,7 +43,11 @@ type TaskService interface {
 	// 获取任务
 	Get(ctx context.Context, in *TaskGetRequest, opts ...client.CallOption) (*TaskGetResponse, error)
 	// 列举任务
+	// 精确匹配，参数使用相等匹配
 	List(ctx context.Context, in *TaskListRequest, opts ...client.CallOption) (*TaskListResponse, error)
+	// 搜索任务
+	// 模糊匹配，参数使用相似匹配
+	Search(ctx context.Context, in *TaskSearchRequest, opts ...client.CallOption) (*TaskSearchResponse, error)
 }
 
 type taskService struct {
@@ -108,6 +112,16 @@ func (c *taskService) List(ctx context.Context, in *TaskListRequest, opts ...cli
 	return out, nil
 }
 
+func (c *taskService) Search(ctx context.Context, in *TaskSearchRequest, opts ...client.CallOption) (*TaskSearchResponse, error) {
+	req := c.c.NewRequest(c.name, "Task.Search", in)
+	out := new(TaskSearchResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Task service
 
 type TaskHandler interface {
@@ -120,7 +134,11 @@ type TaskHandler interface {
 	// 获取任务
 	Get(context.Context, *TaskGetRequest, *TaskGetResponse) error
 	// 列举任务
+	// 精确匹配，参数使用相等匹配
 	List(context.Context, *TaskListRequest, *TaskListResponse) error
+	// 搜索任务
+	// 模糊匹配，参数使用相似匹配
+	Search(context.Context, *TaskSearchRequest, *TaskSearchResponse) error
 }
 
 func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.HandlerOption) error {
@@ -130,6 +148,7 @@ func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.Handl
 		Reject(ctx context.Context, in *TaskRejectRequest, out *BlankResponse) error
 		Get(ctx context.Context, in *TaskGetRequest, out *TaskGetResponse) error
 		List(ctx context.Context, in *TaskListRequest, out *TaskListResponse) error
+		Search(ctx context.Context, in *TaskSearchRequest, out *TaskSearchResponse) error
 	}
 	type Task struct {
 		task
@@ -160,4 +179,8 @@ func (h *taskHandler) Get(ctx context.Context, in *TaskGetRequest, out *TaskGetR
 
 func (h *taskHandler) List(ctx context.Context, in *TaskListRequest, out *TaskListResponse) error {
 	return h.TaskHandler.List(ctx, in, out)
+}
+
+func (h *taskHandler) Search(ctx context.Context, in *TaskSearchRequest, out *TaskSearchResponse) error {
+	return h.TaskHandler.Search(ctx, in, out)
 }
