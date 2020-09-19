@@ -49,5 +49,7 @@ message TaskEntity
     string uuid = 1;      // 唯一ID
     string subject = 2;   // 标题
     string body = 3;      // 内容
-    TaskStatus state = 4; // 状态
+    string meta = 4;      // 内容
+    TaskStatus state = 5; // 状态
+    string workflow = 6;  // 工作流
 }

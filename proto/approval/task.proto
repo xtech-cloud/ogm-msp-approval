@@ -28,7 +28,8 @@ message TaskSubmitRequest
 {
     string subject = 1;  // 标题
     string body = 2;     // 内容
-    string workflow = 3; // 工作流
+    string meta = 3;     // 元数据
+    string workflow = 4; // 工作流
 }
 
 // 通过的请求
@@ -82,9 +83,12 @@ message TaskSearchRequest
 {
     int64 offset = 1;     // 偏移值
     int64 count = 2;      // 数量
-    string workflow = 3;  // 工作流（Name）
-    string opreator = 4;  // 操作员
-    TaskStatus state = 5; // 状态
+    string subject = 3;   // 标题
+    string body = 4;      // 内容
+    string meta = 5;      // 元数据
+    string workflow = 6;  // 工作流（Name）
+    string opreator = 7;  // 操作员
+    TaskStatus state = 8; // 状态
 }
 
 // 搜索的回复
@@ -94,4 +98,3 @@ message TaskSearchResponse
     uint64 total = 2;               // 总数
     repeated TaskEntity entity = 3; // 实体列表
 }
-
