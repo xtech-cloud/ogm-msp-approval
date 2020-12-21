@@ -11,6 +11,10 @@ service Operator
     rpc Join(OperatorJoinRequest) returns (BlankResponse) {}
     // 离开一个工作流
     rpc Leave(OperatorLeaveRequest) returns (BlankResponse) {}
+    // 批量加入一个工作流
+    rpc BatchJoin(OperatorBatchJoinRequest) returns (BlankResponse) {}
+    // 批量离开一个工作流
+    rpc BatchLeave(OperatorBatchLeaveRequest) returns (BlankResponse) {}
     // 列举一个工作流下的所有操作员
     rpc List(OperatorListRequest) returns (OperatorListResponse) {}
     // 过滤一个操作员的所有工作流
@@ -29,6 +33,20 @@ message OperatorLeaveRequest
 {
     string operator = 1; // 操作员
     string workflow = 2; // 工作流
+}
+
+// 批量加入的请求
+message OperatorBatchJoinRequest
+{
+    repeated string operator = 1; // 操作员
+    string workflow = 2;          // 工作流
+}
+
+// 批量离开的请求
+message OperatorBatchLeaveRequest
+{
+    repeated string operator = 1; // 操作员
+    string workflow = 2;          // 工作流
 }
 
 // 列举的请求

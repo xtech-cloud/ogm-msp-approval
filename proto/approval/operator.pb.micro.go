@@ -38,6 +38,10 @@ type OperatorService interface {
 	Join(ctx context.Context, in *OperatorJoinRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 离开一个工作流
 	Leave(ctx context.Context, in *OperatorLeaveRequest, opts ...client.CallOption) (*BlankResponse, error)
+	// 批量加入一个工作流
+	BatchJoin(ctx context.Context, in *OperatorBatchJoinRequest, opts ...client.CallOption) (*BlankResponse, error)
+	// 批量离开一个工作流
+	BatchLeave(ctx context.Context, in *OperatorBatchLeaveRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 列举一个工作流下的所有操作员
 	List(ctx context.Context, in *OperatorListRequest, opts ...client.CallOption) (*OperatorListResponse, error)
 	// 过滤一个操作员的所有工作流
@@ -76,6 +80,26 @@ func (c *operatorService) Leave(ctx context.Context, in *OperatorLeaveRequest, o
 	return out, nil
 }
 
+func (c *operatorService) BatchJoin(ctx context.Context, in *OperatorBatchJoinRequest, opts ...client.CallOption) (*BlankResponse, error) {
+	req := c.c.NewRequest(c.name, "Operator.BatchJoin", in)
+	out := new(BlankResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operatorService) BatchLeave(ctx context.Context, in *OperatorBatchLeaveRequest, opts ...client.CallOption) (*BlankResponse, error) {
+	req := c.c.NewRequest(c.name, "Operator.BatchLeave", in)
+	out := new(BlankResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *operatorService) List(ctx context.Context, in *OperatorListRequest, opts ...client.CallOption) (*OperatorListResponse, error) {
 	req := c.c.NewRequest(c.name, "Operator.List", in)
 	out := new(OperatorListResponse)
@@ -103,6 +127,10 @@ type OperatorHandler interface {
 	Join(context.Context, *OperatorJoinRequest, *BlankResponse) error
 	// 离开一个工作流
 	Leave(context.Context, *OperatorLeaveRequest, *BlankResponse) error
+	// 批量加入一个工作流
+	BatchJoin(context.Context, *OperatorBatchJoinRequest, *BlankResponse) error
+	// 批量离开一个工作流
+	BatchLeave(context.Context, *OperatorBatchLeaveRequest, *BlankResponse) error
 	// 列举一个工作流下的所有操作员
 	List(context.Context, *OperatorListRequest, *OperatorListResponse) error
 	// 过滤一个操作员的所有工作流
@@ -113,6 +141,8 @@ func RegisterOperatorHandler(s server.Server, hdlr OperatorHandler, opts ...serv
 	type operator interface {
 		Join(ctx context.Context, in *OperatorJoinRequest, out *BlankResponse) error
 		Leave(ctx context.Context, in *OperatorLeaveRequest, out *BlankResponse) error
+		BatchJoin(ctx context.Context, in *OperatorBatchJoinRequest, out *BlankResponse) error
+		BatchLeave(ctx context.Context, in *OperatorBatchLeaveRequest, out *BlankResponse) error
 		List(ctx context.Context, in *OperatorListRequest, out *OperatorListResponse) error
 		Filter(ctx context.Context, in *OperatorFilterRequest, out *OperatorFilterResponse) error
 	}
@@ -133,6 +163,14 @@ func (h *operatorHandler) Join(ctx context.Context, in *OperatorJoinRequest, out
 
 func (h *operatorHandler) Leave(ctx context.Context, in *OperatorLeaveRequest, out *BlankResponse) error {
 	return h.OperatorHandler.Leave(ctx, in, out)
+}
+
+func (h *operatorHandler) BatchJoin(ctx context.Context, in *OperatorBatchJoinRequest, out *BlankResponse) error {
+	return h.OperatorHandler.BatchJoin(ctx, in, out)
+}
+
+func (h *operatorHandler) BatchLeave(ctx context.Context, in *OperatorBatchLeaveRequest, out *BlankResponse) error {
+	return h.OperatorHandler.BatchLeave(ctx, in, out)
 }
 
 func (h *operatorHandler) List(ctx context.Context, in *OperatorListRequest, out *OperatorListResponse) error {
