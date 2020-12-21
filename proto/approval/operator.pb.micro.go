@@ -38,8 +38,10 @@ type OperatorService interface {
 	Join(ctx context.Context, in *OperatorJoinRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 离开一个工作流
 	Leave(ctx context.Context, in *OperatorLeaveRequest, opts ...client.CallOption) (*BlankResponse, error)
-	// 列举
+	// 列举一个工作流下的所有操作员
 	List(ctx context.Context, in *OperatorListRequest, opts ...client.CallOption) (*OperatorListResponse, error)
+	// 过滤一个操作员的所有工作流
+	Filter(ctx context.Context, in *OperatorFilterRequest, opts ...client.CallOption) (*OperatorFilterResponse, error)
 }
 
 type operatorService struct {
@@ -84,6 +86,16 @@ func (c *operatorService) List(ctx context.Context, in *OperatorListRequest, opt
 	return out, nil
 }
 
+func (c *operatorService) Filter(ctx context.Context, in *OperatorFilterRequest, opts ...client.CallOption) (*OperatorFilterResponse, error) {
+	req := c.c.NewRequest(c.name, "Operator.Filter", in)
+	out := new(OperatorFilterResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Operator service
 
 type OperatorHandler interface {
@@ -91,8 +103,10 @@ type OperatorHandler interface {
 	Join(context.Context, *OperatorJoinRequest, *BlankResponse) error
 	// 离开一个工作流
 	Leave(context.Context, *OperatorLeaveRequest, *BlankResponse) error
-	// 列举
+	// 列举一个工作流下的所有操作员
 	List(context.Context, *OperatorListRequest, *OperatorListResponse) error
+	// 过滤一个操作员的所有工作流
+	Filter(context.Context, *OperatorFilterRequest, *OperatorFilterResponse) error
 }
 
 func RegisterOperatorHandler(s server.Server, hdlr OperatorHandler, opts ...server.HandlerOption) error {
@@ -100,6 +114,7 @@ func RegisterOperatorHandler(s server.Server, hdlr OperatorHandler, opts ...serv
 		Join(ctx context.Context, in *OperatorJoinRequest, out *BlankResponse) error
 		Leave(ctx context.Context, in *OperatorLeaveRequest, out *BlankResponse) error
 		List(ctx context.Context, in *OperatorListRequest, out *OperatorListResponse) error
+		Filter(ctx context.Context, in *OperatorFilterRequest, out *OperatorFilterResponse) error
 	}
 	type Operator struct {
 		operator
@@ -122,4 +137,8 @@ func (h *operatorHandler) Leave(ctx context.Context, in *OperatorLeaveRequest, o
 
 func (h *operatorHandler) List(ctx context.Context, in *OperatorListRequest, out *OperatorListResponse) error {
 	return h.OperatorHandler.List(ctx, in, out)
+}
+
+func (h *operatorHandler) Filter(ctx context.Context, in *OperatorFilterRequest, out *OperatorFilterResponse) error {
+	return h.OperatorHandler.Filter(ctx, in, out)
 }
