@@ -35,6 +35,13 @@ enum TaskStatus {
     TASK_STATUS_REJECTED = 3; // 已驳回
 }
 
+// 记录状态
+enum ActionStatus {
+    ACTION_STATUS_INVALID = 0;  // 无效
+    ACTION_STATUS_ACCEPTED = 1; // 已通过
+    ACTION_STATUS_REJECTED = 2; // 已驳回
+}
+
 // 工作流实体
 message WorkflowEntity
 {
@@ -52,4 +59,13 @@ message TaskEntity
     string meta = 4;      // 内容
     TaskStatus state = 5; // 状态
     string workflow = 6;  // 工作流
+}
+
+// 记录实体
+message ActionEntity
+{
+    string uuid = 1;        // 唯一ID
+    string task = 2;        // 任务ID
+    string operator = 3;    // 操作员ID
+    ActionStatus state = 4; // 状态
 }

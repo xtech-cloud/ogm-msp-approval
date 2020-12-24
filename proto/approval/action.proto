@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "proto/approval/shared.proto";
+
+package approval;
+
+// 记录
+service Action
+{
+    // 查询
+    rpc Query(ActionQueryRequest) returns (ActionQueryResponse) {}
+}
+
+// 查询记录的请求
+message ActionQueryRequest
+{
+    int64 offset = 1;    // 偏移值
+    int64 count = 2;     // 数量
+    string workflow = 3; // 工作流ID
+    string task = 4;     // 任务ID
+    string operator = 5; // 操作员ID
+}
+
+// 查询记录的回复
+message ActionQueryResponse
+{
+    Status status = 1;                // 状态
+    uint64 total = 2;                 // 总数
+    repeated ActionEntity entity = 3; // 实体列表
+}
