@@ -59,7 +59,7 @@ message TaskEntity
     string meta = 4;      // 内容
     TaskStatus state = 5; // 状态
     string workflow = 6;  // 工作流
-    int64 updatedAat = 7; // 更新时间(Utc时间戳)
+    int64 updatedAt = 7; // 更新时间(Utc时间戳)
 }
 
 // 记录实体
@@ -69,5 +69,5 @@ message ActionEntity
     string task = 2;        // 任务ID
     string operator = 3;    // 操作员ID
     ActionStatus state = 4; // 状态
-    int64 updatedAat = 5;   // 更新时间(Utc时间戳)
+    int64 updatedAt = 5;   // 更新时间(Utc时间戳)
 }
