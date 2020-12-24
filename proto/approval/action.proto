@@ -14,11 +14,12 @@ service Action
 // 查询记录的请求
 message ActionQueryRequest
 {
-    int64 offset = 1;    // 偏移值
-    int64 count = 2;     // 数量
-    string workflow = 3; // 工作流ID
-    string task = 4;     // 任务ID
-    string operator = 5; // 操作员ID
+    int64 offset = 1;       // 偏移值
+    int64 count = 2;        // 数量
+    string workflow = 3;    // 工作流ID
+    string task = 4;        // 任务ID
+    string operator = 5;    // 操作员ID
+    ActionStatus state = 6; // 状态
 }
 
 // 查询记录的回复
