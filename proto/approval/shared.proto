@@ -23,8 +23,9 @@ message BlankResponse
 // 工作流模式
 enum WorkflowMode {
     WORKFLOW_MODE_INVALID = 0;  // 无效
-    WORKFLOW_MODE_PARALLEL = 1; // 并行
-    WORKFLOW_MODE_QUEUE = 2;    // 顺序
+    WORKFLOW_MODE_ALL = 1;      // 所有, 当前工作流中所有操作员通过，任务通过
+    WORKFLOW_MODE_ANY = 2;      // 任一, 当前工作流中任一操作员通过，任务通过
+    WORKFLOW_MODE_MAJORITY = 3; // 过半, 当前工作流中过半作员通过，任务通过
 }
 
 // 任务状态
@@ -59,7 +60,7 @@ message TaskEntity
     string meta = 4;      // 内容
     TaskStatus state = 5; // 状态
     string workflow = 6;  // 工作流
-    int64 updatedAt = 7; // 更新时间(Utc时间戳)
+    int64 updatedAt = 7;  // 更新时间(Utc时间戳)
 }
 
 // 记录实体
@@ -69,5 +70,5 @@ message ActionEntity
     string task = 2;        // 任务ID
     string operator = 3;    // 操作员ID
     ActionStatus state = 4; // 状态
-    int64 updatedAt = 5;   // 更新时间(Utc时间戳)
+    int64 updatedAt = 5;    // 更新时间(Utc时间戳)
 }
