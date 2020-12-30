@@ -70,5 +70,6 @@ message ActionEntity
     string task = 2;        // 任务ID
     string operator = 3;    // 操作员ID
     ActionStatus state = 4; // 状态
-    int64 updatedAt = 5;    // 更新时间(Utc时间戳)
+    string reason = 5;      // 原因
+    int64 updatedAt = 6;    // 更新时间(Utc时间戳)
 }
