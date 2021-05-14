@@ -9,6 +9,8 @@ service Task
 {
     // 提交一个任务
     rpc Submit(TaskSubmitRequest) returns (BlankResponse) {}
+    // 撤消一个任务
+    rpc Cancel(TaskCancelRequest) returns (BlankResponse) {}
     // 通过一个任务
     rpc Accept(TaskAcceptRequest) returns (BlankResponse) {}
     // 驳回一个任务
@@ -30,6 +32,12 @@ message TaskSubmitRequest
     string body = 2;     // 内容
     string meta = 3;     // 元数据
     string workflow = 4; // 工作流
+}
+
+// 撤消的请求
+message TaskCancelRequest
+{
+    string uuid = 1;     // uuid
 }
 
 // 通过的请求

@@ -36,6 +36,8 @@ var _ server.Option
 type TaskService interface {
 	// 提交一个任务
 	Submit(ctx context.Context, in *TaskSubmitRequest, opts ...client.CallOption) (*BlankResponse, error)
+	// 撤消一个任务
+	Cancel(ctx context.Context, in *TaskCancelRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 通过一个任务
 	Accept(ctx context.Context, in *TaskAcceptRequest, opts ...client.CallOption) (*BlankResponse, error)
 	// 驳回一个任务
@@ -64,6 +66,16 @@ func NewTaskService(name string, c client.Client) TaskService {
 
 func (c *taskService) Submit(ctx context.Context, in *TaskSubmitRequest, opts ...client.CallOption) (*BlankResponse, error) {
 	req := c.c.NewRequest(c.name, "Task.Submit", in)
+	out := new(BlankResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *taskService) Cancel(ctx context.Context, in *TaskCancelRequest, opts ...client.CallOption) (*BlankResponse, error) {
+	req := c.c.NewRequest(c.name, "Task.Cancel", in)
 	out := new(BlankResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -127,6 +139,8 @@ func (c *taskService) Search(ctx context.Context, in *TaskSearchRequest, opts ..
 type TaskHandler interface {
 	// 提交一个任务
 	Submit(context.Context, *TaskSubmitRequest, *BlankResponse) error
+	// 撤消一个任务
+	Cancel(context.Context, *TaskCancelRequest, *BlankResponse) error
 	// 通过一个任务
 	Accept(context.Context, *TaskAcceptRequest, *BlankResponse) error
 	// 驳回一个任务
@@ -144,6 +158,7 @@ type TaskHandler interface {
 func RegisterTaskHandler(s server.Server, hdlr TaskHandler, opts ...server.HandlerOption) error {
 	type task interface {
 		Submit(ctx context.Context, in *TaskSubmitRequest, out *BlankResponse) error
+		Cancel(ctx context.Context, in *TaskCancelRequest, out *BlankResponse) error
 		Accept(ctx context.Context, in *TaskAcceptRequest, out *BlankResponse) error
 		Reject(ctx context.Context, in *TaskRejectRequest, out *BlankResponse) error
 		Get(ctx context.Context, in *TaskGetRequest, out *TaskGetResponse) error
@@ -163,6 +178,10 @@ type taskHandler struct {
 
 func (h *taskHandler) Submit(ctx context.Context, in *TaskSubmitRequest, out *BlankResponse) error {
 	return h.TaskHandler.Submit(ctx, in, out)
+}
+
+func (h *taskHandler) Cancel(ctx context.Context, in *TaskCancelRequest, out *BlankResponse) error {
+	return h.TaskHandler.Cancel(ctx, in, out)
 }
 
 func (h *taskHandler) Accept(ctx context.Context, in *TaskAcceptRequest, out *BlankResponse) error {

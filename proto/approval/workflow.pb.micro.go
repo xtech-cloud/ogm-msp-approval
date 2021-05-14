@@ -35,7 +35,7 @@ var _ server.Option
 
 type WorkflowService interface {
 	// 创建一个工作流
-	Make(ctx context.Context, in *WorkflowMakeRequest, opts ...client.CallOption) (*BlankResponse, error)
+	Make(ctx context.Context, in *WorkflowMakeRequest, opts ...client.CallOption) (*WorkflowMakeResponse, error)
 	// 列举工作流
 	List(ctx context.Context, in *WorkflowListRequest, opts ...client.CallOption) (*WorkflowListResponse, error)
 	// 删除一个工作流
@@ -56,9 +56,9 @@ func NewWorkflowService(name string, c client.Client) WorkflowService {
 	}
 }
 
-func (c *workflowService) Make(ctx context.Context, in *WorkflowMakeRequest, opts ...client.CallOption) (*BlankResponse, error) {
+func (c *workflowService) Make(ctx context.Context, in *WorkflowMakeRequest, opts ...client.CallOption) (*WorkflowMakeResponse, error) {
 	req := c.c.NewRequest(c.name, "Workflow.Make", in)
-	out := new(BlankResponse)
+	out := new(WorkflowMakeResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (c *workflowService) Get(ctx context.Context, in *WorkflowGetRequest, opts 
 
 type WorkflowHandler interface {
 	// 创建一个工作流
-	Make(context.Context, *WorkflowMakeRequest, *BlankResponse) error
+	Make(context.Context, *WorkflowMakeRequest, *WorkflowMakeResponse) error
 	// 列举工作流
 	List(context.Context, *WorkflowListRequest, *WorkflowListResponse) error
 	// 删除一个工作流
@@ -111,7 +111,7 @@ type WorkflowHandler interface {
 
 func RegisterWorkflowHandler(s server.Server, hdlr WorkflowHandler, opts ...server.HandlerOption) error {
 	type workflow interface {
-		Make(ctx context.Context, in *WorkflowMakeRequest, out *BlankResponse) error
+		Make(ctx context.Context, in *WorkflowMakeRequest, out *WorkflowMakeResponse) error
 		List(ctx context.Context, in *WorkflowListRequest, out *WorkflowListResponse) error
 		Remove(ctx context.Context, in *WorkflowRemoveRequest, out *BlankResponse) error
 		Get(ctx context.Context, in *WorkflowGetRequest, out *WorkflowGetResponse) error
@@ -127,7 +127,7 @@ type workflowHandler struct {
 	WorkflowHandler
 }
 
-func (h *workflowHandler) Make(ctx context.Context, in *WorkflowMakeRequest, out *BlankResponse) error {
+func (h *workflowHandler) Make(ctx context.Context, in *WorkflowMakeRequest, out *WorkflowMakeResponse) error {
 	return h.WorkflowHandler.Make(ctx, in, out)
 }
 
